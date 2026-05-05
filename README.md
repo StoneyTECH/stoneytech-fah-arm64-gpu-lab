@@ -48,6 +48,13 @@ FAH_USER=Stoney_DeVille FAH_TEAM=0 FAH_PASSKEY='your-passkey' \
   ./scripts/run-fah-cpu-test.sh --client /path/to/fah-client --cpus 8 --seconds 1800
 ```
 
+Prefer the containerized path on Spark:
+
+```sh
+FAH_USER=Stoney_DeVille FAH_TEAM=0 FAH_PASSKEY='your-passkey' \
+  ./scripts/run-fah-cpu-test-container.sh --cpus 8 --seconds 1800
+```
+
 Build the PR #442 test client on Spark:
 
 ```sh
@@ -90,8 +97,11 @@ scripts/
   collect-hardware-profile.sh
   collect-fah-evidence.sh
   run-fah-cpu-test.sh
+  run-fah-cpu-test-container.sh
   openmm-smoke-test.py
   run-openmm-smoke.sh
+containers/
+  fah-cpu-test/Dockerfile
 templates/
   hardware-profile-report.md
   fah-client-evidence-report.md

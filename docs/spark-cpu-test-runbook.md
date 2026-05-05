@@ -33,6 +33,23 @@ cd stoneytech-fah-arm64-gpu-lab
 
 ## Step 2: Build PR #442 Client
 
+Preferred on Spark: build and run inside the containerized harness:
+
+```sh
+FAH_USER=Stoney_DeVille \
+FAH_TEAM=0 \
+FAH_PASSKEY='your-passkey' \
+./scripts/run-fah-cpu-test-container.sh \
+  --cpus 8 \
+  --seconds 1800
+```
+
+This keeps the Folding@home client, build cache, core downloads, and logs inside
+container-mounted lab directories. It does not install or modify a host
+Folding@home service.
+
+Host fallback:
+
 On Debian/Ubuntu, install dependencies and build:
 
 ```sh
@@ -61,7 +78,9 @@ Review the generated `reports/hardware-profile-*` directory before publishing an
 
 ## Step 4: Run CPU-Only Folding Test
 
-Start with a modest CPU count so the machine stays responsive:
+If you used the containerized command in step 2, this step is already done.
+
+For the host fallback, start with a modest CPU count so the machine stays responsive:
 
 ```sh
 FAH_USER=Stoney_DeVille \
