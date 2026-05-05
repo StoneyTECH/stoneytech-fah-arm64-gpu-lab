@@ -41,6 +41,13 @@ Run an OpenMM platform smoke test if OpenMM is installed:
 ./scripts/run-openmm-smoke.sh
 ```
 
+Run the maintainer-requested ARM64 CPU GROMACS test:
+
+```sh
+FAH_USER=Stoney_DeVille FAH_TEAM=0 FAH_PASSKEY='your-passkey' \
+  ./scripts/run-fah-cpu-test.sh --client /path/to/fah-client --cpus 8 --seconds 1800
+```
+
 Reports are written under `reports/`.
 
 ## Evidence We Want
@@ -49,6 +56,7 @@ Reports are written under `reports/`.
 - NVIDIA GPU model, driver, CUDA runtime, and PCI identity.
 - OpenCL platform/device visibility when present.
 - Folding@home client version and GPU detection logs.
+- ARM64 CPU GROMACS core assignment and progress logs.
 - Assignment failure logs showing the missing ARM64 GPU core path.
 - OpenMM CUDA platform availability.
 - Optional GROMACS CUDA build and benchmark logs.
@@ -72,11 +80,13 @@ Do not add:
 scripts/
   collect-hardware-profile.sh
   collect-fah-evidence.sh
+  run-fah-cpu-test.sh
   openmm-smoke-test.py
   run-openmm-smoke.sh
 templates/
   hardware-profile-report.md
   fah-client-evidence-report.md
+  fah-arm64-cpu-gromacs-report.md
   openmm-validation-report.md
   gromacs-validation-report.md
   beta-validation-checklist.md
