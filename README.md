@@ -48,6 +48,14 @@ FAH_USER=Stoney_DeVille FAH_TEAM=0 FAH_PASSKEY='your-passkey' \
   ./scripts/run-fah-cpu-test.sh --client /path/to/fah-client --cpus 8 --seconds 1800
 ```
 
+Build the PR #442 test client on Spark:
+
+```sh
+./scripts/bootstrap-pr442-client.sh --install-deps --jobs 8
+```
+
+See `docs/spark-cpu-test-runbook.md` for the full runbook.
+
 Reports are written under `reports/`.
 
 ## Evidence We Want
@@ -78,6 +86,7 @@ Do not add:
 
 ```text
 scripts/
+  bootstrap-pr442-client.sh
   collect-hardware-profile.sh
   collect-fah-evidence.sh
   run-fah-cpu-test.sh
