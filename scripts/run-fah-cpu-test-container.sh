@@ -95,7 +95,7 @@ if [ "$INSTALL_DEPS" -eq 1 ]; then
 fi
 
 if [ "$BUILD_IMAGE" -eq 1 ]; then
-  docker build -t "$IMAGE" -f "$repo_root/containers/fah-cpu-test/Dockerfile" "$repo_root"
+  docker build --network host -t "$IMAGE" -f "$repo_root/containers/fah-cpu-test/Dockerfile" "$repo_root"
 fi
 
 docker_args=(--rm)
@@ -104,7 +104,7 @@ if [ -t 0 ] && [ -t 1 ]; then
 fi
 
 exec docker run "${docker_args[@]}" \
-  --network bridge \
+  --network host \
   --cpus "$CPUS" \
   -v "$repo_root:/workspace/stoneytech-fah-arm64-gpu-lab:ro" \
   -v "$WORK_ROOT:/workspace/fah-build" \
