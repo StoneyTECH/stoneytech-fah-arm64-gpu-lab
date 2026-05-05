@@ -12,7 +12,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       liblz4-dev \
       libssl-dev \
       libsystemd-dev \
-      npm \
       python3 \
       python3-pip \
       python3-venv \
