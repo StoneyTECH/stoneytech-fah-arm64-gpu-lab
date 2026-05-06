@@ -41,6 +41,24 @@ Run an OpenMM platform smoke test if OpenMM is installed:
 ./scripts/run-openmm-smoke.sh
 ```
 
+Collect Spark GPU readiness inventory:
+
+```sh
+./scripts/collect-gpu-readiness-inventory.sh
+```
+
+Run a CUDA smoke test in the standard NVIDIA PyTorch container:
+
+```sh
+./scripts/run-cuda-smoke-container.sh
+```
+
+Run OpenMM inside the same GPU container, optionally with the CUDA 13 plugin:
+
+```sh
+./scripts/run-openmm-smoke.sh --container --cuda-extra cuda13 --platform CUDA
+```
+
 Run the maintainer-requested ARM64 CPU GROMACS test:
 
 ```sh
@@ -61,7 +79,9 @@ Build the PR #442 test client on Spark:
 ./scripts/bootstrap-pr442-client.sh --install-deps --jobs 8
 ```
 
-See `docs/spark-cpu-test-runbook.md` for the full runbook.
+See `docs/spark-cpu-test-runbook.md` for the CPU runbook.
+See `docs/spark-gpu-readiness-runbook.md` for the GPU/OpenMM readiness runbook.
+See `docs/reports/spark-readiness-evidence-2026-05-06.md` for the current Spark evidence summary.
 
 Reports are written under `reports/`.
 
@@ -96,8 +116,10 @@ scripts/
   bootstrap-pr442-client.sh
   collect-hardware-profile.sh
   collect-fah-evidence.sh
+  collect-gpu-readiness-inventory.sh
   run-fah-cpu-test.sh
   run-fah-cpu-test-container.sh
+  run-cuda-smoke-container.sh
   openmm-smoke-test.py
   run-openmm-smoke.sh
 containers/
@@ -111,6 +133,10 @@ templates/
   beta-validation-checklist.md
 docs/
   official-contribution-path.md
+  spark-cpu-test-runbook.md
+  spark-gpu-readiness-runbook.md
+  reports/
+    spark-readiness-evidence-2026-05-06.md
 reports/
   generated evidence output, ignored by git except .gitkeep
 ```
