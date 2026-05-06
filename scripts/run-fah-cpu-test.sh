@@ -150,6 +150,73 @@ run_shell() {
   } > "${OUT_DIR}/${name}.txt" 2>&1
 }
 
+send_fold_state() {
+  python3 - <<'PY'
+import base64
+import json
+import os
+import socket
+import struct
+import time
+
+
+def recv_until(sock, marker):
+    data = b""
+    while marker not in data:
+        chunk = sock.recv(4096)
+        if not chunk:
+            break
+        data += chunk
+    return data
+
+
+def send_ws_message(sock, payload):
+    data = payload.encode("utf-8")
+    mask = os.urandom(4)
+
+    if len(data) < 126:
+        header = struct.pack("!BB", 0x81, 0x80 | len(data))
+    elif len(data) < 65536:
+        header = struct.pack("!BBH", 0x81, 0x80 | 126, len(data))
+    else:
+        header = struct.pack("!BBQ", 0x81, 0x80 | 127, len(data))
+
+    masked = bytes(byte ^ mask[i % 4] for i, byte in enumerate(data))
+    sock.sendall(header + mask + masked)
+
+
+deadline = time.time() + 15
+last_error = None
+while time.time() < deadline:
+    try:
+        with socket.create_connection(("127.0.0.1", 7396), timeout=2) as sock:
+            key = base64.b64encode(os.urandom(16)).decode("ascii")
+            request = (
+                "GET /api/websocket HTTP/1.1\r\n"
+                "Host: 127.0.0.1:7396\r\n"
+                "Upgrade: websocket\r\n"
+                "Connection: Upgrade\r\n"
+                f"Sec-WebSocket-Key: {key}\r\n"
+                "Sec-WebSocket-Version: 13\r\n"
+                "Origin: http://localhost:7396\r\n"
+                "\r\n"
+            )
+            sock.sendall(request.encode("ascii"))
+            response = recv_until(sock, b"\r\n\r\n")
+            if b" 101 " not in response.split(b"\r\n", 1)[0]:
+                raise RuntimeError(response.decode("utf-8", "replace"))
+
+            send_ws_message(sock, json.dumps({"cmd": "state", "state": "fold"}))
+            print("sent fold state over websocket")
+            raise SystemExit(0)
+    except Exception as exc:
+        last_error = exc
+        time.sleep(0.5)
+
+raise SystemExit(f"failed to send fold state: {last_error}")
+PY
+}
+
 cleanup_client() {
   if [ -f "$PID_FILE" ]; then
     local pid
@@ -176,6 +243,7 @@ run_shell client-version "\"${CLIENT_BIN}\" --version 2>/dev/null || true"
   echo "$!" > "../$(basename "$PID_FILE")"
 )
 
+send_fold_state > "${OUT_DIR}/fold-state.txt" 2>&1 || true
 sleep "$RUNTIME_SECONDS"
 cleanup_client
 trap - EXIT INT TERM
