@@ -9,6 +9,7 @@ This report summarizes the evidence collected for StoneyTech's NVIDIA DGX Spark 
 - Architecture: Linux `aarch64`
 - GPU observed by NVIDIA tooling: `NVIDIA GB10`
 - PCI device observed by Linux/Folding@home logs: NVIDIA `10de:2e12`
+- Evidence scripts run from repository commit: `3518710`
 
 ## Folding@home CPU Proof
 
@@ -44,7 +45,8 @@ These two runs show the ARM64 CPU GROMACS path is functional at both 8 and 16 re
 
 ## GPU Inventory
 
-- Artifact path on Spark: `/home/stoneytech/stoneytech-lab/artifacts/runs/gpu-readiness-inventory-20260506T031435Z`
+- Latest repo-generated artifact path on Spark: `/home/stoneytech/stoneytech-lab/foldingathome/stoneytech-fah-arm64-gpu-lab/reports/gpu-readiness-inventory-20260506T032320Z`
+- Earlier exploratory artifact path on Spark: `/home/stoneytech/stoneytech-lab/artifacts/runs/gpu-readiness-inventory-20260506T031435Z`
 - `nvidia-smi -L` observed: `GPU 0: NVIDIA GB10`
 - NVIDIA driver observed: `580.142`
 - CUDA version reported by `nvidia-smi`: `13.0`
@@ -54,7 +56,8 @@ These two runs show the ARM64 CPU GROMACS path is functional at both 8 and 16 re
 
 ## CUDA Container Smoke
 
-- Artifact path on Spark: `/home/stoneytech/stoneytech-lab/artifacts/runs/cuda-smoke-20260506T031508Z`
+- Latest repo-generated artifact path on Spark: `/home/stoneytech/stoneytech-lab/foldingathome/stoneytech-fah-arm64-gpu-lab/reports/cuda-smoke-20260506T032330Z`
+- Earlier exploratory artifact path on Spark: `/home/stoneytech/stoneytech-lab/artifacts/runs/cuda-smoke-20260506T031508Z`
 - Container image: `nvcr.io/nvidia/pytorch:25.11-py3`
 - PyTorch version observed: `2.10.0a0+b558c986e8.nv25.11`
 - CUDA availability: true
@@ -64,24 +67,39 @@ These two runs show the ARM64 CPU GROMACS path is functional at both 8 and 16 re
 - Compute capability observed: `12.1`
 - Reported device memory: `130663821312` bytes
 - Smoke workload: repeated FP16 matrix multiplication
+- Latest repo-script matmul elapsed time: 0.3212 seconds
 - Result: completed successfully
 
 This proves the Spark can run CUDA compute from a standard NVIDIA container.
 
 ## OpenMM Smoke
 
+### CPU baseline
+
+- Latest repo-generated artifact path on Spark: `/home/stoneytech/stoneytech-lab/foldingathome/stoneytech-fah-arm64-gpu-lab/reports/openmm-smoke-20260506T032343Z`
+- Container image: `nvcr.io/nvidia/pytorch:25.11-py3`
+- OpenMM version reported by script: `8.5.1.dev-f7fa0c2`
+- Requested platform: `CPU`
+- Platforms observed: `Reference`, `CPU`
+- Toy system: 256 particles, 100 steps
+- Result: completed successfully
+
+This proves the OpenMM toy system and harness are valid independently of CUDA plugin behavior.
+
 ### Plain OpenMM package
 
-- Artifact path on Spark: `/home/stoneytech/stoneytech-lab/artifacts/runs/openmm-smoke-20260506T031545Z`
-- OpenMM package: `openmm-8.5.1`
+- Latest repo-generated artifact path on Spark: `/home/stoneytech/stoneytech-lab/foldingathome/stoneytech-fah-arm64-gpu-lab/reports/openmm-smoke-20260506T032350Z`
+- Earlier exploratory artifact path on Spark: `/home/stoneytech/stoneytech-lab/artifacts/runs/openmm-smoke-20260506T031545Z`
+- OpenMM version reported by script: `8.5.1.dev-f7fa0c2`
 - Platforms observed: `Reference`, `CPU`
 - CUDA platform observed: no
 - Result: expected failure for CUDA testing because no CUDA platform was exposed
 
 ### OpenMM CUDA 13 plugin
 
-- Artifact path on Spark: `/home/stoneytech/stoneytech-lab/artifacts/runs/openmm-cuda13-smoke-20260506T031623Z`
-- OpenMM package: `openmm-8.5.1`
+- Latest repo-generated artifact path on Spark: `/home/stoneytech/stoneytech-lab/foldingathome/stoneytech-fah-arm64-gpu-lab/reports/openmm-smoke-20260506T032356Z`
+- Earlier exploratory artifact path on Spark: `/home/stoneytech/stoneytech-lab/artifacts/runs/openmm-cuda13-smoke-20260506T031623Z`
+- OpenMM version reported by script: `8.5.1.dev-f7fa0c2`
 - Extra package: `OpenMM-CUDA-13-8.5.1`
 - Platforms observed: `Reference`, `CPU`, `CUDA`
 - CUDA platform observed: yes
